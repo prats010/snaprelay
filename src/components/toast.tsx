@@ -38,9 +38,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (message: string, type: ToastType = 'success') => {
       const id = crypto.randomUUID();
       setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => removeToast(id), 3500);
+      // Purposely removed the auto-timeout so users can dismiss it themselves!
     },
-    [removeToast]
+    []
   );
 
   const icons: Record<ToastType, ReactNode> = {

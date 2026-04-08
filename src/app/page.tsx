@@ -4,6 +4,7 @@ import { getSupabaseServer } from '@/lib/supabase';
 import { formatDistanceToNow } from 'date-fns';
 import { CopyLinkButton } from '@/components/copy-link-button';
 import { DeleteButton } from '@/components/delete-button';
+import { RealtimeHelper } from '@/components/realtime-helper';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,9 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 py-8 sm:py-12 animate-fade-in">
+    <>
+      <RealtimeHelper />
+      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 py-8 sm:py-12 animate-fade-in">
       {/* Header */}
       <header className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -124,5 +127,6 @@ export default async function DashboardPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

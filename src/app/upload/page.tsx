@@ -142,7 +142,7 @@ export default function UploadPage() {
           id = createData.id;
        }
 
-       router.push(`/t/${id}`);
+       router.push(`/`);
        
      } catch (err: any) {
        setError(err.message || 'Error occurred during transfer');

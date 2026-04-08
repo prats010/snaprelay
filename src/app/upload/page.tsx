@@ -161,12 +161,12 @@ export default function UploadPage() {
 
       <div 
         {...getRootProps()} 
-        className={`relative overflow-hidden rounded-2xl border-2 transition-colors ${
+        className={`w-full min-h-[360px] relative overflow-hidden rounded-3xl border-2 transition-all flex flex-col justify-center ${
           isDragActive 
-           ? 'border-blue-500 bg-blue-500/10' 
+           ? 'border-indigo-500 bg-indigo-500/10 scale-[1.02]' 
            : type === 'file'
-             ? 'border-zinc-700 bg-zinc-900'
-             : 'border-dashed border-zinc-800 bg-zinc-950 hover:border-zinc-700 hover:bg-zinc-900/50'
+             ? 'border-indigo-500/30 bg-indigo-950/20 shadow-[0_0_30px_rgba(99,102,241,0.05)]'
+             : 'border-dashed border-zinc-800 bg-zinc-950/50 hover:border-zinc-700 hover:bg-zinc-900/50'
         }`}
       >
         <input {...getInputProps()} />
@@ -182,7 +182,7 @@ export default function UploadPage() {
                onChange={handleTextChange}
                value={content}
                placeholder="Or just paste your link / text here..."
-               className="mt-8 w-full max-w-md resize-none rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-600"
+               className="mt-8 w-full max-w-lg resize-none rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-4 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-indigo-500/50 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 transition-all shadow-inner"
                rows={3}
              />
           </div>
@@ -279,18 +279,18 @@ export default function UploadPage() {
         )}
       </div>
 
-      {error && <div className="mt-4 text-sm text-red-500">{error}</div>}
+      {error && <div className="mt-6 rounded-xl bg-red-500/10 p-4 text-sm font-medium text-red-500 border border-red-500/20 text-center">{error}</div>}
 
-      <div className="mt-8 flex justify-end">
+      <div className="mt-8">
         <button
           onClick={handleUpload}
           disabled={type === 'none' || isUploading}
-          className="flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-xl bg-zinc-100 px-8 py-3.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white disabled:opacity-50 disabled:hover:bg-zinc-100"
+          className="w-full flex items-center justify-center gap-3 rounded-2xl bg-indigo-600 px-8 py-4 text-base font-bold text-white transition-all hover:bg-indigo-500 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
         >
           {isUploading ? (
-            <><Loader2 className="h-4 w-4 animate-spin" /> Uploading...</>
+            <><Loader2 className="h-5 w-5 animate-spin" /> Uploading...</>
           ) : (
-            <><Play className="h-4 w-4" /> Start Relay</>
+            <><Play className="h-5 w-5 fill-current" /> Start Relay</>
           )}
         </button>
       </div>

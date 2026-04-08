@@ -37,25 +37,31 @@ export function DeleteButton({ transferId, storagePath }: { transferId: string; 
       </button>
 
       {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="animate-in zoom-in-95 duration-200 w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
+        <div 
+          className="animate-fade-in"
+          style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', padding: '16px' }}
+        >
+          <div 
+            className="animate-scale-in"
+            style={{ width: '100%', maxWidth: '384px', borderRadius: '16px', border: '1px solid #27272a', backgroundColor: '#09090b', padding: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.7)' }}
+          >
+            <div style={{ marginBottom: '16px', display: 'flex', height: '48px', width: '48px', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)' }}>
               <AlertTriangle className="h-6 w-6 text-red-500" />
             </div>
-            <h3 className="mb-2 text-lg font-bold text-zinc-100">Delete Relay?</h3>
-            <p className="mb-6 text-sm text-zinc-400 leading-relaxed">
-              This will permanently delete the file from the cloud server and immediately deactivate any active share links. Wait, are you absolutely sure you want to do this?
+            <h3 style={{ marginBottom: '8px', fontSize: '18px', fontWeight: 700, color: '#f4f4f5' }}>Delete Relay?</h3>
+            <p style={{ marginBottom: '24px', fontSize: '14px', color: '#a1a1aa', lineHeight: '1.6' }}>
+              This will permanently delete the file from the cloud and deactivate any share links.
             </p>
-            <div className="flex gap-3 justify-end">
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button 
                 onClick={() => setShowConfirm(false)} 
-                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition"
+                style={{ borderRadius: '8px', padding: '8px 16px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                Nevermind
+                Cancel
               </button>
               <button 
                 onClick={() => { setShowConfirm(false); handleDelete(); }} 
-                className="rounded-lg bg-red-500/10 border border-red-500/30 px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-500 hover:text-white transition shadow-lg shadow-red-500/20 active:scale-[0.98]"
+                style={{ borderRadius: '8px', padding: '8px 16px', fontSize: '14px', fontWeight: 700, color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer' }}
               >
                 Delete Permanently
               </button>

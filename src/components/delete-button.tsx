@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Trash2, Loader2, AlertTriangle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { createPortal } from 'react-dom';
 import { useToast } from '@/components/toast';
 
 export function DeleteButton({ transferId, storagePath }: { transferId: string; storagePath?: string | null }) {
@@ -36,10 +37,10 @@ export function DeleteButton({ transferId, storagePath }: { transferId: string; 
         {deleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
       </button>
 
-      {showConfirm && (
+      {showConfirm && typeof document !== 'undefined' && createPortal(
         <div 
           className="animate-fade-in"
-          style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', padding: '16px' }}
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', padding: '16px' }}
         >
           <div 
             className="animate-scale-in"
@@ -67,7 +68,8 @@ export function DeleteButton({ transferId, storagePath }: { transferId: string; 
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

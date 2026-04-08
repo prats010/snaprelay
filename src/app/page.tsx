@@ -1,65 +1,128 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { PlusCircle, FileText, Link as LinkIcon, FileIcon, Zap, Trash2 } from 'lucide-react';
+import { getSupabaseServer } from '@/lib/supabase';
+import { formatDistanceToNow } from 'date-fns';
+import { CopyLinkButton } from '@/components/copy-link-button';
+import { DeleteButton } from '@/components/delete-button';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function DashboardPage() {
+  const supabase = getSupabaseServer();
+
+  const { data: transfers, error } = await supabase
+    .from('transfers')
+    .select('*')
+    .order('created_at', { ascending: false });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 py-8 sm:py-12 animate-fade-in">
+      {/* Header */}
+      <header className="mb-8 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft">
+            <Zap className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100">
+              SnapRelay
+            </h1>
+            <p className="text-xs text-muted hidden sm:block">Micro-transfer dashboard</p>
+          </div>
+        </div>
+        <Link
+          href="/upload"
+          className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:bg-primary-hover active:scale-[0.97] shadow-lg shadow-primary/10"
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span className="hidden sm:inline">New Transfer</span>
+          <span className="sm:hidden">New</span>
+        </Link>
+      </header>
+
+      {/* Content */}
+      {error ? (
+        <div className="animate-fade-in-up rounded-xl bg-danger-soft p-5 text-red-400 border border-red-900/30 text-sm">
+          Failed to load transfers. Check your Supabase connection.
+        </div>
+      ) : transfers?.length === 0 ? (
+        <div className="animate-fade-in-up flex flex-col items-center justify-center rounded-2xl border border-dashed border-card-border py-20 sm:py-28 text-center">
+          <div className="mb-5 rounded-2xl bg-surface-raised p-5">
+            <PlusCircle className="h-8 w-8 text-muted" />
+          </div>
+          <h3 className="text-lg font-semibold text-zinc-200">No active transfers</h3>
+          <p className="text-sm text-muted max-w-xs mt-2 leading-relaxed">
+            Files, links, and text snippets you relay will appear here.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/upload"
+            className="mt-6 flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:bg-primary-hover active:scale-[0.97]"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <PlusCircle className="h-4 w-4" />
+            Create your first relay
+          </Link>
         </div>
-      </main>
+      ) : (
+        <div className="grid gap-3">
+          {transfers?.map((tx, i) => (
+            <div
+              key={tx.id}
+              className="animate-fade-in-up group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-card-border bg-card p-4 hover:bg-card-hover hover:border-zinc-700/60 transition-all"
+              style={{ animationDelay: `${i * 50}ms` }}
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-raised text-muted">
+                  {tx.type === 'link' && <LinkIcon className="h-4.5 w-4.5" />}
+                  {tx.type === 'text' && <FileText className="h-4.5 w-4.5" />}
+                  {tx.type === 'file' && <FileIcon className="h-4.5 w-4.5" />}
+                </div>
+                <div className="min-w-0">
+                  <h4 className="truncate text-sm font-medium text-zinc-200">
+                    {tx.type === 'file'
+                      ? tx.filename || tx.original_filename
+                      : tx.type === 'link'
+                        ? tx.url
+                        : 'Text Snippet'}
+                  </h4>
+                  <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted">
+                    <span className="capitalize rounded bg-surface-raised px-1.5 py-0.5 text-[10px] font-medium">
+                      {tx.type}
+                    </span>
+                    <span>{formatDistanceToNow(new Date(tx.created_at), { addSuffix: true })}</span>
+                    {tx.size_bytes && (
+                      <span>{(tx.size_bytes / 1024 / 1024).toFixed(2)} MB</span>
+                    )}
+                    {tx.expires_at && (
+                      <span
+                        className={
+                          new Date(tx.expires_at) < new Date()
+                            ? 'text-red-400'
+                            : ''
+                        }
+                      >
+                        {new Date(tx.expires_at) < new Date()
+                          ? 'Expired'
+                          : `Expires ${formatDistanceToNow(new Date(tx.expires_at))}`}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
+                <Link
+                  href={`/t/${tx.id}`}
+                  className="flex items-center rounded-lg border border-card-border bg-surface-raised px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-card-hover transition-all active:scale-[0.97]"
+                >
+                  View
+                </Link>
+                <CopyLinkButton link={`/t/${tx.id}`} />
+                <DeleteButton transferId={tx.id} storagePath={tx.storage_path} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

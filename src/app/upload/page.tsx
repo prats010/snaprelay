@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { UploadCloud, Link as LinkIcon, FileText, Loader2, Play } from 'lucide-react';
+import { UploadCloud, Link as LinkIcon, FileText, Loader2, Play, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function UploadPage() {
@@ -245,28 +245,30 @@ export default function UploadPage() {
               </div>
 
               {isSuggesting && (
-                <div className="mt-4 flex items-center gap-2 text-xs text-zinc-500">
-                  <Loader2 className="h-3 w-3 animate-spin" />
+                <div className="mt-4 flex items-center gap-2 text-xs text-indigo-400 animate-pulse">
+                  <Sparkles className="h-3.5 w-3.5" />
                   <span>AI generating smart filename...</span>
                 </div>
               )}
 
               {suggestedName && (
-                <div className="mt-4 flex items-center justify-between rounded-lg bg-zinc-800/50 p-3 text-sm">
+                <div className="mt-4 flex items-center justify-between rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 text-sm shadow-[0_0_20px_rgba(99,102,241,0.1)] transition-all">
                   <div className="flex flex-col">
-                    <span className="text-xs text-zinc-500">AI Suggestion</span>
-                     <span className="font-medium text-zinc-300">{suggestedName}</span>
+                    <span className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold tracking-wider text-indigo-400 uppercase">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      AI Suggestion
+                    </span>
+                     <span className="font-medium text-indigo-100 text-base">{suggestedName}</span>
                   </div>
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      // In real app, update the state representing the final filename before upload
-                      alert(`Adopted ${suggestedName}`);
+                      setFile(new File([file], suggestedName, { type: file.type }));
                       setSuggestedName(null);
                     }}
-                    className="rounded bg-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-200 hover:bg-zinc-600 transition"
+                    className="rounded-lg bg-indigo-500 px-4 py-2 text-xs font-bold text-white hover:bg-indigo-600 transition active:scale-95 shadow-lg shadow-indigo-500/20"
                   >
-                    Use this
+                    ✨ Use this
                   </button>
                 </div>
               )}

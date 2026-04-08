@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Lock, FileText, Link as LinkIcon, Download, Copy, AlertTriangle } from 'lucide-react';
+import { Lock, FileText, Link as LinkIcon, Download, Copy, AlertTriangle, Share2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function TransferAccessPage() {
@@ -140,8 +140,11 @@ export default function TransferAccessPage() {
          
          <div className="mb-6 flex items-start justify-between border-b border-zinc-800 pb-6">
             <div>
-               <h1 className="text-xl font-bold text-zinc-100">
+               <h1 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
                   {data.type === 'file' ? data.filename : data.type === 'link' ? 'Shared Link' : 'Shared Text'}
+                  {data.isOwner && (
+                    <span className="rounded bg-indigo-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-indigo-400 tracking-wider">You Created This</span>
+                  )}
                </h1>
                <div className="mt-1 flex items-center gap-3 text-xs text-zinc-500">
                   <span>Created {formatDistanceToNow(new Date(data.created_at))} ago</span>
@@ -213,15 +216,29 @@ export default function TransferAccessPage() {
                </>
             )}
             {data.type === 'file' && data.downloadUrl && (
-               <a 
-                 href={data.downloadUrl}
-                 download={data.filename}
-                 target="_blank"
-                 rel="noreferrer"
-                 className="flex items-center justify-center gap-2 rounded-lg bg-zinc-100 px-5 py-2.5 text-sm font-medium text-zinc-900 hover:bg-white transition"
-               >
-                 <Download className="h-4 w-4" /> Download File
-               </a>
+               <>
+                 {data.isOwner && (
+                    <button 
+                       onClick={() => handleCopy(window.location.href)}
+                       className="flex items-center justify-center gap-2 rounded-lg border border-indigo-500/50 bg-indigo-500/10 px-5 py-2.5 text-sm font-semibold text-indigo-400 hover:bg-indigo-500/20 transition"
+                    >
+                       <Share2 className="h-4 w-4" /> Copy Share Link
+                    </button>
+                 )}
+                 <a 
+                   href={data.downloadUrl}
+                   download={data.filename}
+                   target="_blank"
+                   rel="noreferrer"
+                   className={`flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-match transition ${
+                     data.isOwner 
+                       ? 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800' 
+                       : 'bg-zinc-100 text-zinc-900 hover:bg-white font-medium'
+                   }`}
+                 >
+                   <Download className="h-4 w-4" /> {data.isOwner ? 'Download Anyway' : 'Download File'}
+                 </a>
+               </>
             )}
          </div>
 

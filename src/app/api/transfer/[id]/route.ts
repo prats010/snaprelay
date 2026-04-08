@@ -61,9 +61,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // Strip sensitive fields (like pin_hash) before returning
     delete transfer.pin_hash;
 
+    // Check if the user requesting this is the dashboard owner themselves!
+    const authCookie = request.headers.get('cookie')?.includes(`snaprelay_auth=${process.env.DASHBOARD_PASSPHRASE}`);
+    const isOwner = !!authCookie;
+
     return NextResponse.json({
        ...transfer,
-       downloadUrl
+       downloadUrl,
+       isOwner
     });
 
   } catch (error: any) {

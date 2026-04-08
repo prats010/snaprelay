@@ -4,9 +4,11 @@ import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud, Link as LinkIcon, FileText, Loader2, Play, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/toast';
 
 export default function UploadPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [content, setContent] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
   
@@ -142,6 +144,7 @@ export default function UploadPage() {
           id = createData.id;
        }
 
+       toast('Relay successful!', 'success');
        router.push(`/`);
        
      } catch (err: any) {

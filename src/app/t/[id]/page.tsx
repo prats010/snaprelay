@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Lock, FileText, Link as LinkIcon, Download, Copy, AlertTriangle, Share2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useToast } from '@/components/toast';
 
 export default function TransferAccessPage() {
   const params = useParams();
   const id = params.id as string;
+  const { toast } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +59,7 @@ export default function TransferAccessPage() {
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('Copied to clipboard!');
+    toast('Copied to clipboard!', 'success');
   };
 
   if (loading && !needsPin) {
